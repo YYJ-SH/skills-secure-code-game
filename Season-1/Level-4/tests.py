@@ -31,8 +31,9 @@ class TestDatabase(unittest.TestCase):
     # tests for correct retrieval of stock price
     def test_3(self):
         op = c.DB_CRUD_ops()
+       
         expected_output = "[METHOD EXECUTED] get_stock_price\n[QUERY] SELECT price FROM stocks WHERE symbol = 'MSFT'\n[RESULT] (300.0,)\n"
-        actual_output = op.get_stock_price('MSFT')
+        actual_output = op.get_stock_price("MSFT")
         self.assertEqual(actual_output, expected_output)
 
     # tests for correct update of stock price given symbol and updated price
@@ -57,6 +58,22 @@ class TestDatabase(unittest.TestCase):
         expected_output = "[METHOD EXECUTED] exec_user_script\n[QUERY] SELECT price FROM stocks WHERE symbol = 'MSFT'\n[RESULT] (300.0,)"
         actual_output = op.exec_user_script("SELECT price FROM stocks WHERE symbol = 'MSFT'")
         self.assertEqual(actual_output, expected_output) 
+    def test_sql_injection(self):
+        op = c.DB_CRUD_ops()
+        print("test_8 is activating_sql injection trying...")
+        # SQL 인젝션 공격을 시도하는 입력 값
+        sql_injection_input = "MSFT'; UPDATE stocks SET price = 300 WHERE symbol = 'MSFT'--"
+        actual_output = op.get_stock_price(sql_injection_input)
+
+        # SQL 인젝션 공격이 성공했는지 확인
+        if "UPDATE" in actual_output and "300" not in actual_output:
+            print("SQL 인젝션 공격 성공: MSFT 심볼의 가격이 변경되었습니다.")
+        else:
+            print("SQL 인젝션 공격 실패")
+
+        # 데이터베이스 상태 확인
+        check_output = op.get_stock_info("MSFT")
+        print(check_output)
         
 if __name__ == '__main__':    
     unittest.main()

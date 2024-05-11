@@ -39,8 +39,8 @@ class TestDatabase(unittest.TestCase):
         developer_output_expectation = "[METHOD EXECUTED] get_stock_price\n[QUERY] SELECT price FROM stocks WHERE symbol = 'MSFT'\n[RESULT] (300.0,)\n"
 
         # but the hacker passes is this:
-        what_hacker_passes = op.get_stock_price("MSFT'; UPDATE stocks SET price = '525' WHERE symbol = 'MSFT'--")
-        hacker_output = "[METHOD EXECUTED] get_stock_price\n[QUERY] SELECT price FROM stocks WHERE symbol = 'MSFT'; UPDATE stocks SET price = '525' WHERE symbol = 'MSFT'--'\n[SCRIPT EXECUTION]\n"
+        what_hacker_passes = op.get_stock_price("MSFT';UPDATE stocks SET price = 300 WHERE symbol='MSFT'--")
+        hacker_output = "[METHOD EXECUTED] get_stock_price\n[QUERY] SELECT price FROM stocks WHERE symbol = 'MSFT'; UPDATE stocks SET price = '300' WHERE symbol = 'MSFT'--'\n[SCRIPT EXECUTION]\n"
 
         self.assertEqual(developer_output_expectation, what_hacker_passes)
 
