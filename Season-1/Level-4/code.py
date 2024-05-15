@@ -101,13 +101,23 @@ class DB_CRUD_ops(object):
 
             # performs the checks for good cyber security and safe software against SQL injection
             if has_restricted_char or not correct_number_of_single_quotes:
+                print("초기char bool값 제한된 문자열이 있나요?",bool(has_restricted_char))
+                print("초기따옴표가 2개 이상인가요? ",bool(not correct_number_of_single_quotes))
+                if has_restricted_char:
+                    print("제한된 문자열 존재")
+                if not correct_number_of_single_quotes:
+                    print("따옴표2개초과")
+                
+
                 # in case you want to sanitize user input, please uncomment the following 2 lines
                 # sanitized_query = query.translate({ord(char):None for char in restricted_chars})
                 # res += "[SANITIZED_QUERY]" + sanitized_query + "\n"
                 res += "CONFIRM THAT THE ABOVE QUERY IS NOT MALICIOUS TO EXECUTE"
             else:
+                print("else문 안에서 제한된 문자열이 있거나 따옴표개수가 안맞나요?: ",bool(has_restricted_char or not correct_number_of_single_quotes))
+                
                 cur.execute(query)
-
+                print("else문 실행중 쿼리 출력완료")
                 query_outcome = cur.fetchall()
                 for result in query_outcome:
                     res += "[RESULT] " + str(result)
